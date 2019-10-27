@@ -7,7 +7,7 @@ from faker import Faker
 from names import get_name
 import asyncio
 import re
-from secrets import service_password
+from settings import service_password, max_message_symbols
 
 log = logging.getLogger(__name__)
 
@@ -53,9 +53,12 @@ async def index(request):
                     )
                 continue
 
-            if len(msg.data) > 500:
+            if len(msg.data) > max_message_symbols:
                 await ws_current.send_json(
-                    {'action': 'service', 'header': "Service message", 'text': "Very long message, 500 symbols max. Kick"}
+                    {'action': 'service',
+                     'header': "Service message",
+                     'text': f"Very long message, {max_message_symbols} symbols max. Kick"
+                     }
                 )
                 break
 
