@@ -1,0 +1,4 @@
+aiohttp==3.6.*
+aiohttp-jinja2==1.2.*
+Faker==2.0.*
+Jinja2==2.10.*

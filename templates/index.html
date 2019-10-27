@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<html>
+<head>
+  <title>ЧУИ</title>
+  <link rel="shortcut icon" href="https://img.icons8.com/plasticine/100/000000/hearts.png" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
+  </script>
+  <script language="javascript" type="text/javascript">
+     $(function() {
+       var conn = null;
+       var name = "UNKNOWN";
+       function log(msg) {
+         var control = $('#log');
+         var date = new Date();
+         var date_prompt = '(' + date.toISOString().split('T')[1].slice(0,8) + ') ';
+         control.html(control.html() + msg + '<br/>');
+         control.scrollTop(control.scrollTop() + 1000);
+       }
+       function beep() {
+          var snd = new Audio("data:audio/wav;base64,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qJrx4KOQjahZxWbcZgztj2c49nKmkId44S71j0c8eV9yDK6uPRzx5X18eDvjvQ6yKo9ZSS6l//8elePK/Lf//IInrOF/FvDoADYAGBMGb7FtErm5MXMlmPAJQVgWta7Zx2go+8xJ0UiCb8LHHdftWyLJE0QIAIsI+UbXu67dZMjmgDGCGl1H+vpF4NSDckSIkk7Vd+sxEhBQMRU8j/12UIRhzSaUdQ+rQU5kGeFxm+hb1oh6pWWmv3uvmReDl0UnvtapVaIzo1jZbf/pD6ElLqSX+rUmOQNpJFa/r+sa4e/pBlAABoAAAAA3CUgShLdGIxsY7AUABPRrgCABdDuQ5GC7DqPQCgbbJUAoRSUj+NIEig0YfyWUho1VBBBA//uQZB4ABZx5zfMakeAAAAmwAAAAF5F3P0w9GtAAACfAAAAAwLhMDmAYWMgVEG1U0FIGCBgXBXAtfMH10000EEEEEECUBYln03TTTdNBDZopopYvrTTdNa325mImNg3TTPV9q3pmY0xoO6bv3r00y+IDGid/9aaaZTGMuj9mpu9Mpio1dXrr5HERTZSmqU36A3CumzN/9Robv/Xx4v9ijkSRSNLQhAWumap82WRSBUqXStV/YcS+XVLnSS+WLDroqArFkMEsAS+eWmrUzrO0oEmE40RlMZ5+ODIkAyKAGUwZ3mVKmcamcJnMW26MRPgUw6j+LkhyHGVGYjSUUKNpuJUQoOIAyDvEyG8S5yfK6dhZc0Tx1KI/gviKL6qvvFs1+bWtaz58uUNnryq6kt5RzOCkPWlVqVX2a/EEBUdU1KrXLf40GoiiFXK///qpoiDXrOgqDR38JB0bw7SoL+ZB9o1RCkQjQ2CBYZKd/+VJxZRRZlqSkKiws0WFxUyCwsKiMy7hUVFhIaCrNQsKkTIsLivwKKigsj8XYlwt/WKi2N4d//uQRCSAAjURNIHpMZBGYiaQPSYyAAABLAAAAAAAACWAAAAApUF/Mg+0aohSIRobBAsMlO//Kk4soosy1JSFRYWaLC4qZBYWFRGZdwqKiwkNBVmoWFSJkWFxX4FFRQWR+LsS4W/rFRb/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////VEFHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU291bmRib3kuZGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMjAwNGh0dHA6Ly93d3cuc291bmRib3kuZGUAAAAAAAAAACU=");
+          snd.play();
+        }
+       function connect() {
+         disconnect();
+         var wsUri = (window.location.protocol=='https:'&&'wss://'||'ws://')+window.location.host;
+         conn = new WebSocket(wsUri);
+         //log('Connecting...');
+         conn.onopen = function() {
+           //log('Connected.');
+           update_ui();
+         };
+         conn.onmessage = function(e) {
+           var data = JSON.parse(e.data);
+           switch (data.action) {
+             case  'connect':
+               name = data.name;
+               log('<span class="badge badge-pill badge-light">You connected as ' + name + '</span>');
+               $('#peoples').html(data.peoples);
+               update_ui();
+               break;
+             case  'disconnect':
+               // name = data.name;
+               log('<span class="badge badge-pill badge-secondary">Disconnected ' + data.name + '</span>');
+               $('#peoples').html(data.peoples);
+               update_ui();
+               break;
+             case 'join':
+               log('<span class="badge badge-pill badge-info">Joined ' + data.name + '</span>');
+               $('#peoples').html(data.peoples);
+               break;
+             case 'sent':
+               log('<span class="badge badge-dark">' + data.name + '</span> <small>' + data.text + '</small>');
+               $('#peoples').html(data.peoples);
+               beep();
+               break;
+           }
+         };
+         conn.onclose = function() {
+           log('<small>Disconnected.</small>');
+           $('#peoples').html('0');
+           conn = null;
+           update_ui();
+         };
+       }
+       function disconnect() {
+         if (conn != null) {
+           //log('Disconnecting...');
+           conn.close();
+           conn = null;
+           name = 'UNKNOWN';
+           update_ui();
+         }
+       }
+       function update_ui() {
+         if (conn == null) {
+           $('#status').text('disconnected');
+           $('#status').removeClass('badge-success')
+           $('#status').addClass('badge-danger')
+           $('#connect').html('Connect');
+           $('#connect').removeClass('btn-success')
+           $('#connect').addClass('btn-warning')
+           $('#send').prop("disabled", true);
+         } else {
+           $('#status').text('connected');
+           $('#status').removeClass('badge-danger')
+           $('#status').addClass('badge-success')
+           $('#connect').html('Disconnect');
+           $('#connect').removeClass('btn-warning')
+           $('#connect').addClass('btn-success')
+           $('#send').prop("disabled", false);
+         }
+         $('#name').text(name);
+       }
+       $('#connect').on('click', function() {
+         if (conn == null) {
+           connect();
+         } else {
+           disconnect();
+         }
+         update_ui();
+         return false;
+       });
+       $('#send').on('click', function() {
+         var text = $('#text').val();
+         if (text) {
+         log('<span class="badge badge-primary">You</span> <small>' + text + '</small>');
+         //log(text);
+         conn.send(text);
+         $('#text').val('').focus();
+         }
+         return false;
+       });
+       $('#text').on('keyup', function(e) {
+         if (e.keyCode === 13) {
+          if (conn != null) {
+           $('#send').click();
+           return false;
+          }
+         }
+       });
+     });
+    </script>
+</head>
+<body>
+
+<div class="container">
+  <h1 class="mb-4 mt-4"><span class="badge badge-dark">Чат</span> упоротых имён!</h1>
+  <div class="mb-2 col-sm-12 com-lg-8">
+    <button id="connect" class="btn btn-warning">Connect</button>&nbsp;
+    <span class="badge p-2"> You: </span>
+    <span id="name" class="badge badge-secondary p-2">UNKNOWN</span>
+    <span id="status" class="badge badge-danger p-2">disconnected</span>
+    <span class="badge badge-dark ml-4 p-2">Peoples online: <strong>
+      <span id="peoples" class="badge badge-success">0</span></strong>
+      </span>
+  </div>
+
+  <div id="log" class="col-sm-12 col-lg-8 border border-dark mb-2 mt-2" style="height:35em;overflow:auto;">
+  </div>
+
+  <form id="chatform" onsubmit="return false;">
+    <div class="form-group row">
+      <div class="col-sm-11 col-lg-7">
+        <input id="text" class="form-group form-control" type="text" placeholder="Message..." />
+      </div>
+      <input id="send" class="form-group btn btn-primary" type="button" value="Send" disabled/>
+    </div>
+  </form>
+</div>
+</body>
+</html>
