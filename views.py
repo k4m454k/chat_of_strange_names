@@ -44,7 +44,15 @@ async def index(request):
         msg = await ws_current.receive()
 
         if msg.type == aiohttp.WSMsgType.text:
-            if msg.data.startswith("/service"+service_password):
+            if msg.data.startswith("/"):
+                if not msg.data.startswith("/service"+service_password):
+                    await ws_current.send_json(
+                        {'action': 'service',
+                         'header': "Service password",
+                         'text': f"Service password wrong"
+                         }
+                    )
+                    continue
                 message = msg.data[len("/service"+service_password):]
                 print(message)
                 for ws in request.app['websockets'].values():
