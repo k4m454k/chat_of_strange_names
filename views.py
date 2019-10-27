@@ -5,8 +5,16 @@ import aiohttp_jinja2
 from aiohttp import web
 from faker import Faker
 from names import get_name
+import asyncio
+import re
 
 log = logging.getLogger(__name__)
+
+
+def clean_html(raw_html):
+    cleanr = re.compile(r'<.*?>')
+    clean_text = re.sub(cleanr, '', raw_html)
+    return clean_text
 
 
 def get_random_name():
@@ -35,12 +43,28 @@ async def index(request):
         msg = await ws_current.receive()
 
         if msg.type == aiohttp.WSMsgType.text:
+            if msg.data.startswith("/service"):
+                message = msg.data[8:]
+                print(message)
+                for ws in request.app['websockets'].values():
+                    await ws.send_json(
+                        {'action': 'service', 'header': "SERVICE", 'text': message}
+                    )
+                continue
+
+            if len(msg.data) > 500:
+                await ws_current.send_json(
+                    {'action': 'service', 'header': "SERVICE", 'text': "Very long message, 500 symbols max. Kick"}
+                )
+                break
             for ws in request.app['websockets'].values():
                 if ws is not ws_current:
                     await ws.send_json(
-                        {'action': 'sent', 'name': name, 'text': msg.data, 'peoples': len(request.app['websockets'].values())})
+                        {'action': 'sent', 'name': name, 'text': clean_html(msg.data), 'peoples': len(request.app['websockets'].values())})
         else:
             break
+        await asyncio.sleep(3)
+
 
     del request.app['websockets'][name]
     log.info('%s disconnected.', name)

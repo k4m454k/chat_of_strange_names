@@ -55,6 +55,10 @@
                $('#peoples').html(data.peoples);
                beep();
                break;
+             case 'service':
+               log('<div class="alert alert-dark" role="alert"><h4 class="alert-heading">' + data.header + '</h4><hr><p>' + data.text + '</p></div>');
+               beep();
+               break;
            }
          };
          conn.onclose = function() {
@@ -132,7 +136,7 @@
     <span class="badge p-2"> You: </span>
     <span id="name" class="badge badge-secondary p-2">UNKNOWN</span>
     <span id="status" class="badge badge-danger p-2">disconnected</span>
-    <span class="badge badge-dark ml-4 p-2">Peoples online: <strong>
+    <span class="badge badge-dark ml-4 p-2">People online: <strong>
       <span id="peoples" class="badge badge-success">0</span></strong>
       </span>
   </div>
