@@ -33,7 +33,7 @@ def main():
     logging.basicConfig(level=logging.INFO)
 
     app = init_app()
-    web.run_app(app)
+    web.run_app(app, port=8080)
 
 
 if __name__ == '__main__':
