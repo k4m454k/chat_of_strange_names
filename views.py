@@ -7,6 +7,7 @@ from faker import Faker
 from names import get_name
 import asyncio
 import re
+from secrets import service_password
 
 log = logging.getLogger(__name__)
 
@@ -43,20 +44,21 @@ async def index(request):
         msg = await ws_current.receive()
 
         if msg.type == aiohttp.WSMsgType.text:
-            if msg.data.startswith("/service"):
-                message = msg.data[8:]
+            if msg.data.startswith("/service"+service_password):
+                message = msg.data[len("/service"+service_password):]
                 print(message)
                 for ws in request.app['websockets'].values():
                     await ws.send_json(
-                        {'action': 'service', 'header': "SERVICE", 'text': message}
+                        {'action': 'service', 'header': "Service message", 'text': message}
                     )
                 continue
 
             if len(msg.data) > 500:
                 await ws_current.send_json(
-                    {'action': 'service', 'header': "SERVICE", 'text': "Very long message, 500 symbols max. Kick"}
+                    {'action': 'service', 'header': "Service message", 'text': "Very long message, 500 symbols max. Kick"}
                 )
                 break
+
             for ws in request.app['websockets'].values():
                 if ws is not ws_current:
                     await ws.send_json(
