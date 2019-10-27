@@ -4,6 +4,7 @@ import aiohttp
 import aiohttp_jinja2
 from aiohttp import web
 from faker import Faker
+from names import get_name
 
 log = logging.getLogger(__name__)
 
@@ -21,7 +22,7 @@ async def index(request):
 
     await ws_current.prepare(request)
 
-    name = get_random_name()
+    name = get_name()
     log.info('%s joined.', name)
 
     await ws_current.send_json({'action': 'connect', 'name': name, 'peoples': len(request.app['websockets'].values()) + 1})
