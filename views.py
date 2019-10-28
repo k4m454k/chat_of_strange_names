@@ -21,6 +21,7 @@ def clean_html(raw_html):
 
 async def index(request):
     if asp.is_banned(request.remote):
+        log.info(f"Banned ip {request.remote} request chat")
         return aiohttp_jinja2.render_template('ban.html', request, {})
     user = User(request.remote)
     ws_current = web.WebSocketResponse()
@@ -71,6 +72,7 @@ async def index(request):
             identic_massages = user.message(msg.data)
 
             if 7 > identic_massages > 5:
+                log.info(f"User {name}:{request.remote} recieve ban warning")
                 await ws_current.send_json(
                     {'action': 'service',
                      'header': "Стоп Спам",
@@ -79,6 +81,7 @@ async def index(request):
                 )
             elif identic_massages > 7:
                 asp.ban(request.remote)
+                log.info(f"User {name}:{request.remote} baned!")
                 await ws_current.send_json(
                     {'action': 'service',
                      'header': "Вы забанены",

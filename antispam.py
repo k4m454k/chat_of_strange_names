@@ -38,4 +38,3 @@ class Antispam():
                     return False
                 return True
         return False
-
