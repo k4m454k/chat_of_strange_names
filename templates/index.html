@@ -36,18 +36,18 @@
            switch (data.action) {
              case  'connect':
                name = data.name;
-               log('<span class="badge badge-pill badge-light">You connected as ' + name + '</span>');
+               log('<span class="badge badge-pill badge-light">Вы подключены как ' + name + '</span>');
                $('#peoples').html(data.peoples);
                update_ui();
                break;
              case  'disconnect':
                // name = data.name;
-               log('<span class="badge badge-pill badge-secondary">Disconnected ' + data.name + '</span>');
+               log('<span class="badge badge-pill badge-secondary">Из чата выходит ' + data.name + '</span>');
                $('#peoples').html(data.peoples);
                update_ui();
                break;
              case 'join':
-               log('<span class="badge badge-pill badge-info">Joined ' + data.name + '</span>');
+               log('<span class="badge badge-pill badge-info">В чат входит ' + data.name + '</span>');
                $('#peoples').html(data.peoples);
                break;
              case 'sent':
@@ -62,7 +62,7 @@
            }
          };
          conn.onclose = function() {
-           log('<small>Disconnected.</small>');
+           log('<span class="badge badge-pill badge-secondary">Disconnected</span>');
            $('#peoples').html('0');
            conn = null;
            update_ui();
@@ -109,7 +109,7 @@
        $('#send').on('click', function() {
          var text = $('#text').val();
          if (text) {
-         log('<span class="badge badge-primary">You</span> <small>' + text + '</small>');
+         log('<span class="badge badge-primary">Вы</span> <small>' + text + '</small>');
          //log(text);
          conn.send(text);
          $('#text').val('').focus();
@@ -145,13 +145,14 @@
   </div>
 
   <form id="chatform" onsubmit="return false;">
-    <div class="form-group row">
-      <div class="col-sm-10 col-lg-7">
-        <input id="text" class="form-group form-control" type="text" placeholder="Message..." />
-      </div>
-      <input id="send" class="form-group btn btn-primary" type="button" value="Send" disabled/>
+   <div class="input-group mb-3 col-sm-12 col-lg-8">
+     <input id="text" class="form-group form-control" type="text" placeholder="Message..." />
+     <div class="input-group-append">
+     <input id="send" class="form-group btn btn-primary" type="button" value="Send" disabled/>
+     </div>
     </div>
   </form>
+
 </div>
 </body>
 </html>

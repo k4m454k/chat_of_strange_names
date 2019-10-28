@@ -30,7 +30,17 @@ nouns_f = [
 ]
 
 
-def get_name():
+def get_name(available_names=None):
+    if not available_names:
+        return get_random_name()
+    else:
+        name = get_random_name()
+        while name in available_names:
+            name = get_random_name()
+        return name
+
+
+def get_random_name():
     if choice([True, False]):
         name = f"{choice(adjectives_m)} {choice(nouns_m)}".title()
         return name
