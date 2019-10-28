@@ -3,6 +3,7 @@
 <html>
 <head>
   <title>ЧУИ</title>
+  <meta name="viewport" content="width=600px, user-scalable=no" />
   <link rel="shortcut icon" href="https://img.icons8.com/plasticine/100/000000/hearts.png" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js">
@@ -10,7 +11,7 @@
   <script language="javascript" type="text/javascript">
      $(function() {
        var conn = null;
-       var name = "UNKNOWN";
+       var name = "---";
        function log(msg) {
          var control = $('#log');
          var date = new Date();
@@ -73,24 +74,18 @@
            //log('Disconnecting...');
            conn.close();
            conn = null;
-           name = 'UNKNOWN';
+           name = '---';
            update_ui();
          }
        }
        function update_ui() {
          if (conn == null) {
-           $('#status').text('disconnected');
-           $('#status').removeClass('badge-success')
-           $('#status').addClass('badge-danger')
-           $('#connect').html('Connect');
+           $('#connect').html('Подключиться');
            $('#connect').removeClass('btn-success')
            $('#connect').addClass('btn-warning')
            $('#send').prop("disabled", true);
          } else {
-           $('#status').text('connected');
-           $('#status').removeClass('badge-danger')
-           $('#status').addClass('badge-success')
-           $('#connect').html('Disconnect');
+           $('#connect').html('Отключиться');
            $('#connect').removeClass('btn-warning')
            $('#connect').addClass('btn-success')
            $('#send').prop("disabled", false);
@@ -129,26 +124,25 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container-fluid">
   <h1 class="mb-4 mt-4"><span class="badge badge-dark">Чат</span> упоротых имён!</h1>
-  <div class="mb-2 col-sm-12 com-lg-8">
-    <button id="connect" class="btn btn-warning">Connect</button>&nbsp;
-    <span class="badge p-2"> You: </span>
-    <span id="name" class="badge badge-secondary p-2">UNKNOWN</span>
-    <span id="status" class="badge badge-danger p-2">disconnected</span>
-    <span class="badge badge-dark ml-4 p-2">People online: <strong>
+  <div class="mb-2 col-12 com-lg-8">
+    <button id="connect" class="btn btn-warning">Подключиться</button>&nbsp;
+    <span class="badge p-2"> Вы: </span>
+    <span id="name" class="badge badge-primary p-2">---</span>
+    <span class="badge badge-dark p-2">Людей онлайн: <strong>
       <span id="peoples" class="badge badge-success">0</span></strong>
       </span>
   </div>
 
-  <div id="log" class="col-sm-12 col-lg-8 border border-dark mb-2 mt-2" style="height:35em;overflow:auto;white-space: normal;">
+  <div id="log" class="col-12 col-lg-8 border border-dark mb-2 mt-2" style="height:35em;overflow:auto;white-space: normal;">
   </div>
 
-  <form id="chatform" onsubmit="return false;">
-   <div class="input-group mb-3 col-sm-12 col-lg-8">
-     <input id="text" class="form-group form-control" type="text" placeholder="Message..." />
+  <form id="chatform" autocomplete="off" onsubmit="return false;">
+   <div class="input-group mb-3 col-12 col-lg-8">
+     <input id="text" class="form-group form-control" type="text" placeholder="Сообщение..." />
      <div class="input-group-append">
-     <input id="send" class="form-group btn btn-primary" type="button" value="Send" disabled/>
+     <input id="send" class="form-group btn btn-primary" type="button" value="Отправить" disabled/>
      </div>
     </div>
   </form>

@@ -25,6 +25,12 @@ async def init_app():
 
 async def shutdown(app):
     for ws in app['websockets'].values():
+        await ws.send_json(
+            {'action': 'service',
+             'header': "Отключение",
+             'text': f"Инициирована процедура отключения сервера. Перезайдите позже."
+             }
+        )
         await ws.close()
     app['websockets'].clear()
 

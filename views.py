@@ -3,7 +3,7 @@ import logging
 import aiohttp
 import aiohttp_jinja2
 from aiohttp import web
-from names import get_name
+from names import get_name, get_random_name
 import asyncio
 import re
 from settings import service_password, max_message_symbols
@@ -24,11 +24,10 @@ async def index(request):
         log.info(f"Banned ip {request.remote} request chat")
         return aiohttp_jinja2.render_template('ban.html', request, {})
     user = User(request.remote)
-    ws_current = web.WebSocketResponse()
+    ws_current = web.WebSocketResponse(heartbeat=2, receive_timeout=10)
     ws_ready = ws_current.can_prepare(request)
     if not ws_ready.ok:
         return aiohttp_jinja2.render_template('index.html', request, {})
-
     await ws_current.prepare(request)
     name = get_name(available_names=request.app['websockets'].keys())
     log.info('%s joined.', name)
@@ -38,7 +37,6 @@ async def index(request):
     for ws in request.app['websockets'].values():
         await ws.send_json({'action': 'join', 'name': name, 'peoples': len(request.app['websockets'].values())+1})
     request.app['websockets'][name] = ws_current
-
     while True:
         msg = await ws_current.receive()
 
@@ -70,7 +68,6 @@ async def index(request):
                 break
 
             identic_massages = user.message(msg.data)
-
             if 7 > identic_massages > 5:
                 log.info(f"User {name}:{request.remote} recieve ban warning")
                 await ws_current.send_json(
@@ -85,14 +82,20 @@ async def index(request):
                 await ws_current.send_json(
                     {'action': 'service',
                      'header': "Вы забанены",
-                     'text': "К сожалению вы пренебрегли правилом не спамить в чате и отныне забанены. <hr> Бан не вечный и вам придётся немного подождать. В будущем воздержитесь от спама и сделайте своё пребывание в чате веселым и не напряжным для остальных участников общения."
+                     'text': "К сожалению вы пренебрегли правилом не спамить в чате и отныне забанены. <hr> Бан не "
+                             "вечный и вам придётся немного подождать. В будущем воздержитесь от спама и сделайте "
+                             "своё пребывание в чате веселым и не напряжным для остальных участников общения. "
                      }
                 )
                 break
             for ws in request.app['websockets'].values():
                 if ws is not ws_current:
-                    await ws.send_json(
-                        {'action': 'sent', 'name': name, 'text': clean_html(msg.data), 'peoples': len(request.app['websockets'].values())})
+                    await ws.send_json({
+                        'action': 'sent',
+                        'name': name,
+                        'text': clean_html(msg.data), 'peoples': len(request.app['websockets'].values())
+                    })
+
         else:
             break
 

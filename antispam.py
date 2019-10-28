@@ -31,10 +31,15 @@ class Antispam():
     def is_banned(self, ip):
         if not self.banned:
             return False
+        self.update_list()
         for user in self.banned:
             if user.ip == ip:
-                if datetime.now() > user.banned_for:
-                    del user
-                    return False
                 return True
         return False
+
+    def update_list(self):
+        new_banned = []
+        for user in self.banned:
+            if datetime.now() < user.banned_for:
+                new_banned.append(user)
+        self.banned = new_banned
