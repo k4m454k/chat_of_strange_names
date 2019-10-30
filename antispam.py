@@ -13,6 +13,7 @@ class User():
     def __init__(self, ip):
         self.ip = ip
         self.messages = []
+        self.passwod_attemps = 0
 
     def message(self, mess):
         self.messages.append(mess)

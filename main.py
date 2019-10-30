@@ -4,7 +4,7 @@ import jinja2
 
 import aiohttp_jinja2
 from aiohttp import web
-from views import index
+from views import index, image, post_image
 
 
 async def init_app():
@@ -19,6 +19,8 @@ async def init_app():
         app, loader=jinja2.PackageLoader('main', 'templates'))
 
     app.router.add_get('/', index)
+    app.router.add_get('/image/{imgname}', image)
+    app.router.add_post('/upload', post_image)
 
     return app
 
