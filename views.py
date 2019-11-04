@@ -49,14 +49,16 @@ async def index(request):
     await ws_current.send_json({
         'action': 'connect',
         'name': name,
-        'peoples': len(request.app['websockets'].values()) + 1
+        'peoples': len(request.app['websockets'].values()) + 1,
+        'inchat': list(request.app['websockets'].keys())
     })
 
     for ws in request.app['websockets'].values():
         await ws.send_json({
             'action': 'join',
             'name': name,
-            'peoples': len(request.app['websockets'].values())+1
+            'peoples': len(request.app['websockets'].values())+1,
+            'inchat': list(request.app['websockets'].keys())
         })
     request.app['websockets'][name] = ws_current
 
@@ -123,11 +125,12 @@ async def index(request):
                 break
             for ws in request.app['websockets'].values():
                 if ws is not ws_current:
-
                     await ws.send_json({
                         'action': 'sent',
                         'name': name,
-                        'text': clean_html(msg.data), 'peoples': len(request.app['websockets'].values())
+                        'text': replace_name_to_span(clean_html(msg.data), list(request.app['websockets'].keys())),
+                        'peoples': len(request.app['websockets'].values()),
+                        'inchat': list(request.app['websockets'].keys())
                     })
 
         else:
@@ -136,9 +139,16 @@ async def index(request):
     del request.app['websockets'][name]
     log.info('%s disconnected.', name)
     for ws in request.app['websockets'].values():
-        await ws.send_json({'action': 'disconnect', 'name': name, 'peoples': len(request.app['websockets'].values())})
+        await ws.send_json({'action': 'disconnect', 'name': name, 'peoples': len(request.app['websockets'].values()),
+                        'inchat': list(request.app['websockets'].keys())})
 
     return ws_current
+
+
+def replace_name_to_span(message, names_list):
+    for name in names_list:
+        message = message.replace(name, f'<span class="badge badge-primary">{name}</span>')
+    return message
 
 
 async def image(request):

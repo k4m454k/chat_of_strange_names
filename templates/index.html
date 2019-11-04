@@ -39,21 +39,25 @@
                name = data.name;
                log('<span class="badge badge-pill badge-light">Вы подключены как ' + name + '</span>');
                $('#peoples').html(data.peoples);
+               show_peoples(data.inchat);
                update_ui();
                break;
              case  'disconnect':
                // name = data.name;
                log('<span class="badge badge-pill badge-secondary">Из чата выходит ' + data.name + '</span>');
                $('#peoples').html(data.peoples);
+               show_peoples(data.inchat);
                update_ui();
                break;
              case 'join':
                log('<span class="badge badge-pill badge-info">В чат входит ' + data.name + '</span>');
                $('#peoples').html(data.peoples);
+               show_peoples(data.inchat);
                break;
              case 'sent':
-               log('<span class="badge badge-dark">' + data.name + '</span> <small>' + data.text + '</small>');
+               log('<span class="badge badge-dark names">' + data.name + '</span> <small>' + data.text + '</small>');
                $('#peoples').html(data.peoples);
+               show_peoples(data.inchat);
                beep();
                break;
              case 'service':
@@ -69,6 +73,22 @@
            update_ui();
          };
        }
+       function show_peoples(peoples) {
+          peoples_wrapper.innerHTML = ``
+           peoples.forEach(function(entry) {
+             peoples_wrapper.innerHTML += `
+               <span class="badge badge-dark names">${entry}</span>
+             `
+            });
+        var spans = document.querySelectorAll('.names')
+
+        spans.forEach(function(span) {
+          span.addEventListener("click", function() {
+            document.getElementById('text').value += ' ' + span.innerHTML + ' '
+          })
+        })
+      }
+
        function disconnect() {
          if (conn != null) {
            //log('Disconnecting...');
@@ -147,6 +167,12 @@
     </div>
   </form>
 
+<div class="col-12">
+  <h5>Люди онлайн:</h5>
+  <hr>
+  <div id="peoples_wrapper"></div>
+
+</div>
 </div>
 </body>
 </html>
